@@ -1,8 +1,9 @@
 import * as React from "react";
 import { ethers } from "ethers";
 import './App.css';
-import abi from './utils/WavePortal.json'
+import abi from './utils/WavePortal.json';
 import Form from './Form';
+import SocialLinks from './SocialLinks';
 
 export default function App() {
   // Contract Info
@@ -34,6 +35,15 @@ export default function App() {
     });
 
     setAllWaves(wavesCleaned);
+
+    waveportalContract.on("NewWave", (from, timestamp, message) => {
+      setAllWaves(oldArray => [...oldArray, {
+        address: from,
+        timestamp: new Date(timestamp * 1000),
+        message: message
+      }])
+
+    });
   }
 
   // Determine if metamask is connected.
@@ -78,7 +88,7 @@ export default function App() {
 
   React.useEffect(() => {
     checkIfWalletIsConnected();
-  }, [currentAccount]);
+  }, []);
 
   const getTotalWaves = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -107,7 +117,6 @@ export default function App() {
     count = await waveportalContract.getTotalWaves();
     console.log('Total waves', count);
     setTotalWaves(count.toNumber());
-    getAllWaves();
   };
   
   return (
@@ -116,19 +125,18 @@ export default function App() {
       <div className="dataContainer">
         <div className="header">
         👋 Hello there!
+        <div>
+                <img src="https://media.giphy.com/media/3ornk57KwDXf81rjWM/giphy.gif" alt="Hello There" />
+        </div>
         </div>
 
+
         <div className="bio">
+        
         I am Dylan and I work on web3 stuff so that's pretty cool right? Connect your Ethereum wallet and wave at me!
         </div>
 
         {currentAccount &&
-          // <form>
-          //   <label><input type="text" placeholder="Type your message here" /></label>
-          //   <button className="button waveButton" onClick={wave}>
-          //   Wave at Me
-          //   </button>
-          // </form>
           <Form submitHandler={wave} changeHandler={setWaveMessage} defaultMessage={waveMessage} />
 
         }   
@@ -160,6 +168,8 @@ export default function App() {
             </div>
           )
         })}
+
+      <SocialLinks />
 
       </div>
     </div>

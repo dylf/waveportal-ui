@@ -158,3 +158,19 @@ input[type=text]:focus {
     transform: translateX(-50%);
   }
 }
+
+.socialLinks {
+  margin: auto;
+}
+
+.socialIcon {
+  margin: 10px;
+}
+
+.socialLinks a{
+  color: #959dcb;
+}
+
+.socialLinks a:hover {
+  color: #00dded;
+}
